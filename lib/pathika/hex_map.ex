@@ -39,7 +39,7 @@ defmodule Pathika.HexMap do
     end)
   end
 
-  @spec hexagon({number, number}, any) :: binary
+  @spec hexagon({number, number}, pos_integer) :: binary
   def hexagon({center_x, center_y}, size) do
     hex_corner = fn i ->
       {center_x + size * :math.cos(:math.pi() / 3 * i),

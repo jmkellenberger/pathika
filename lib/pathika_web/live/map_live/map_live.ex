@@ -3,7 +3,7 @@ defmodule PathikaWeb.MapLive do
   alias Pathika.HexMap
 
   def mount(_, _, socket) do
-    grid = HexMap.hex_grid(3, 3)
+    grid = HexMap.hex_grid(8, 10)
 
     {:ok, assign(socket, :hex_grid, grid)}
   end
@@ -18,29 +18,36 @@ defmodule PathikaWeb.MapLive do
       .hex: {
         transition: all ease 0.3s;
       }
+      .click-through {
+        pointer-events: none;
+      }
     </style>
-    <div class="map-container">
+    <div id="map-container">
       <svg width="1000" height="1000" viewBox="0 0 1000 1000">
-        <g id="hex_map">
+        <g phx-click="select" id="hex_map">
         <%= for {coord, hex} <- @hex_grid do %>
-          <polygon class="hex" id={coord} phx-click={"select-" <> coord} points={hex.points} stroke="gray" fill="black"/>
-          <%= if hex.contents do %>
-          <circle phx-click={"select-" <> coord} cx={hex.center_x} cy={hex.center_y} fill="white" r="8"/>
-          <text phx-click={"select-" <> coord} text-anchor="middle" x={hex.center_x} y={hex.center_y - 20} fill="white" > <%= coord%> </text>
+            <polygon class="hex" id={"hex-" <> coord} points={hex.points} stroke="gray" fill="black"/>
+            <%= if hex.contents do %>
+            <circle class="click-through" cx={hex.center_x} cy={hex.center_y} fill="white" r="8"/>
+            <text class="click-through" text-anchor="middle" x={hex.center_x} y={hex.center_y - 23} fill="white" font-family="monospace" > <%= coord %> </text>
+            <% end %>
           <% end %>
-        <% end %>
         </g>
       </svg>
     </div>
     """
   end
 
-  def handle_event("select-" <> hex_number, _, socket) do
+  def handle_event("select", %{"target" => "hex-" <> hex_number}, socket) do
     map = socket.assigns.hex_grid
     hex = Map.get(map, hex_number)
     hex = Map.put(hex, :contents, !hex.contents)
 
     hex_grid = %{map | hex_number => hex}
     {:noreply, assign(socket, :hex_grid, hex_grid)}
+  end
+
+  def handle_event("select", %{"target" => _}, socket) do
+    {:noreply, socket}
   end
 end
