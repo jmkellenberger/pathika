@@ -18,6 +18,7 @@ defmodule PathikaWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    live "/map", MapLive
   end
 
   # Other scopes may use custom stacks.
