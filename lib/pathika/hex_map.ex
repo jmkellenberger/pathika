@@ -1,4 +1,5 @@
 defmodule Pathika.HexMap do
+  @spec hex_grid(pos_integer, pos_integer) :: map
   def hex_grid(col, row) do
     size = 40
     width = 2 * size
@@ -22,18 +23,23 @@ defmodule Pathika.HexMap do
     end
 
     coordinates
-    |> Enum.map(fn x ->
+    |> Enum.reduce(%{}, fn x, acc ->
       {center_x, center_y} = center_point.(x)
+      coord = coord_to_string.(x)
 
-      %{
-        coord: coord_to_string.(x),
+      hex = %{
+        coord: coord,
         center_x: center_x,
         center_y: center_y,
+        contents: false,
         points: hexagon({center_x, center_y}, size)
       }
+
+      Map.put(acc, coord, hex)
     end)
   end
 
+  @spec hexagon({number, number}, any) :: binary
   def hexagon({center_x, center_y}, size) do
     hex_corner = fn i ->
       {center_x + size * :math.cos(:math.pi() / 3 * i),

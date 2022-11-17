@@ -32,3 +32,4 @@ pathika-*.tar
 npm-debug.log
 /assets/node_modules/
 
+hex.ex

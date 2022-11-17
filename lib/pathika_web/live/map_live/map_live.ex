@@ -13,9 +13,12 @@ defmodule PathikaWeb.MapLive do
     <div class="map-container">
       <svg width="1000" height="1000" viewBox="0 0 1000 1000">
         <g class="hex_map">
-        <%= for hex <- @hex_grid do %>
-          <polygon id={hex.coord} phx-click={"select-" <> hex.coord} points={hex.points} stroke="gray" fill="black"/>
-          <text text-anchor="middle" x={hex.center_x} y={hex.center_y - 20} fill="white" > <%= hex.coord%> </text>
+        <%= for {coord, hex} <- @hex_grid do %>
+          <polygon id={coord} phx-click={"select-" <> coord} points={hex.points} stroke="gray" fill="black"/>
+          <%= if hex.contents do %>
+          <circle cx={hex.center_x} cy={hex.center_y} fill="white" r="8"/>
+          <text text-anchor="middle" x={hex.center_x} y={hex.center_y - 20} fill="white" > <%= coord%> </text>
+          <% end %>
         <% end %>
         </g>
       </svg>
@@ -24,7 +27,9 @@ defmodule PathikaWeb.MapLive do
   end
 
   def handle_event("select-" <> hex_number, _, socket) do
-    IO.inspect(hex_number)
-    {:noreply, socket}
+    map = socket.assigns.hex_grid
+    hex = Map.get(map, hex_number) |> Map.put(:contents, true)
+    hex_grid = %{map | hex_number => hex}
+    {:noreply, assign(socket, :hex_grid, hex_grid)}
   end
 end
