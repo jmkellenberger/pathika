@@ -32,6 +32,8 @@ let liveSocket = new LiveSocket("/live", Socket, {
         click: (e, el) => {
             return {
                 target: e.target.id,
+                altKey: e.altKey,
+                shiftKey: e.shiftKey,
             }
         }
     }
