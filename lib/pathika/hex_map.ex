@@ -8,12 +8,12 @@ defmodule Pathika.HexMap do
     vertical_offset = fn col ->
       case rem(col, 2) do
         0 -> 0
-        _ -> -height / 2
+        _ -> height / 2
       end
     end
 
     center_point = fn {col, row} ->
-      {size + col * width * 0.75, size + row * height + vertical_offset.(col)}
+      {size + (col - 1) * width * 0.75, row * height - vertical_offset.(col)}
     end
 
     coordinates = for x <- 1..col, y <- 1..row, do: {x, y}

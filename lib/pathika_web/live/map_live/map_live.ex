@@ -5,7 +5,9 @@ defmodule PathikaWeb.MapLive do
   def mount(_, _, socket) do
     grid = HexMap.hex_grid(8, 10)
 
-    {:ok, assign(socket, :hex_grid, grid)}
+    socket = assign(socket, hex_grid: grid, page_title: "SectorMaker")
+
+    {:ok, socket}
   end
 
   def render(assigns) do
@@ -21,12 +23,18 @@ defmodule PathikaWeb.MapLive do
       .click-through {
         pointer-events: none;
       }
+      #hex-map {
+        border-style: solid;
+        border-color: grey;
+        border-width: 3px;
+        background-color: black;
+      }
     </style>
     <div id="map-container">
-      <svg width="1000" height="1000" viewBox="0 0 1000 1000">
-        <g phx-click="select" id="hex_map">
+      <svg id="hex-map" height="800px" viewBox="0 0 500 728">
+        <g phx-click="select">
         <%= for {coord, hex} <- @hex_grid do %>
-            <polygon class="hex" id={"hex-" <> coord} points={hex.points} stroke="gray" fill="black"/>
+            <polygon class="hex" id={"hex-" <> coord} points={hex.points} stroke="white" fill="black"/>
             <%= if hex.contents do %>
             <circle class="click-through" cx={hex.center_x} cy={hex.center_y} fill="white" r="8"/>
             <text class="click-through" text-anchor="middle" x={hex.center_x} y={hex.center_y - 23} fill="white" font-family="monospace" > <%= coord %> </text>
@@ -39,12 +47,16 @@ defmodule PathikaWeb.MapLive do
   end
 
   def handle_event("select", %{"target" => "hex-" <> hex_number}, socket) do
-    map = socket.assigns.hex_grid
-    hex = Map.get(map, hex_number)
-    hex = Map.put(hex, :contents, !hex.contents)
+    hex_grid =
+      Map.update!(
+        socket.assigns.hex_grid,
+        hex_number,
+        fn hex -> Map.put(hex, :contents, !hex.contents) end
+      )
 
-    hex_grid = %{map | hex_number => hex}
-    {:noreply, assign(socket, :hex_grid, hex_grid)}
+    socket = assign(socket, :hex_grid, hex_grid)
+
+    {:noreply, socket}
   end
 
   def handle_event("select", %{"target" => _}, socket) do
