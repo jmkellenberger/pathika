@@ -45,10 +45,10 @@ defmodule Pathika.HexGrid do
   end
 
   @spec string_to_coordinate(binary) :: {integer, integer}
-  def string_to_coordinate(hex_number) do
-    [x, y | _] = for <<x::binary-2 <- hex_number>>, do: x |> String.to_integer()
+  def string_to_coordinate(hex) do
+    hex = String.to_integer(hex)
 
-    {x, y}
+    {div(hex, 100), rem(hex, 100)}
   end
 
   defp point_to_string({x, y}), do: "#{x}, #{y}"
