@@ -4,7 +4,7 @@ defmodule PathikaWeb.WorldGenController do
   alias Pathika.WorldGen
 
   def index(conn, _params) do
-    world = WorldGen.build(:main)
+    world = WorldGen.build()
     description = WorldGen.get_description(world)
 
     render(conn, "index.html", description)

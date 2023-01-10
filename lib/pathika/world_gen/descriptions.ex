@@ -2,9 +2,30 @@ defmodule Pathika.WorldGen.Descriptions do
   alias Pathika.Formatter
 
   @data %{
+    type: %{
+      mainworld: "This is the system main world.",
+      worldlet: "Non-MainWorld. This world is too small to be considered a planet.",
+      iceworld: "Non-MainWorld. Much or all of the world's water is locked in its icecaps.",
+      bigworld: "Non-MainWorld. This world's size exceeds the standard range.",
+      radworld: "Non-MainWorld. This world has extremely high levels of radiation.",
+      inferno:
+        "Non-MainWorld. This world is both tectonically and volcanically active. Extreme temperatures render it inhospitable.",
+      innerworld: "Non-MainWorld. This world sits well inside the system's habitable zone.",
+      hospitable:
+        "Non-MainWorld. A rare example of a hospitable world that is not the system main world.",
+      stormworld:
+        "Non-MainWorld. This world is wracked by extreme weather patterns and constant atmospheric turbulence."
+    },
     port: %{
       "X" =>
         "No starport. Class X starports are generally indicative of an interdiction. No provision is made for any starship landings and such landings are probably prohibited.",
+      "Y" => "No spaceport.",
+      "H" =>
+        "Barebones spaceport serving in-system space travel. Provides no services other than a navigational beacon.",
+      "G" =>
+        "Poor quality spaceport serving in-system travel. Facilities for slight spaceship repair.",
+      "F" =>
+        "Good quality spaceport serving in-system travel. Facilities for minor spaceship repair.",
       "E" =>
         "Frontier installation. Essentially a bare spot of bedrock with no fuel, facilities, or bases present.",
       "D" =>
@@ -12,7 +33,7 @@ defmodule Pathika.WorldGen.Descriptions do
       "C" =>
         "Routine quality installation. Only unrefined fuel available. Reasonable repair facilities are present.",
       "B" =>
-        "Good quality installation. Refined fuel available. Annual maintenance overhaul available. Shipyard capable of constructing non-starships present.",
+        "Good quality installation. Refined fuel available. Annual maintenance overhaul available. Shipyard capable ofo constructing non-starships present.",
       "A" =>
         "Excellent quality installation. Refined fuel available. Annual maintenance overhaul available. Shipyard capable of both starship and non-starship construction present."
     },

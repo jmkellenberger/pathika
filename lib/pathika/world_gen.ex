@@ -1,7 +1,7 @@
 defmodule Pathika.WorldGen do
   alias Pathika.WorldGen.{Descriptions, World}
 
-  def build(type, opts \\ [])
+  def build(type \\ Enum.random([:main, :other]), opts \\ [])
 
   def build(:main, opts) do
     World.world_generator(:mainworld, opts)
