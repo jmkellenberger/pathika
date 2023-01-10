@@ -1,4 +1,5 @@
 /* This file is for your main application CSS */
+@import "./phoenix.css";
 
 /* Alerts and form errors used by phx.new */
 .alert {
@@ -149,25 +150,3 @@
   }
 }
 
-/* HEX MAP */
-.hex:hover {
-  fill: gray;
-  transition: all ease 0.3s;
-}
-
-.click-through {
-  pointer-events: none;
-}
-
-#hex-map {
-  border-style: solid;
-  border-color: grey;
-  border-width: 3px;
-  background-color: black;
-}
-
-textarea {
-  overflow-x: scroll;
-  overflow-y: scroll;
-  resize: none;
-}
