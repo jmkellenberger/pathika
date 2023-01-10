@@ -1,4 +1,4 @@
-# fly.toml file generated for pathika on 2022-11-17T12:55:40-05:00
+# fly.toml file generated for pathika on 2023-01-10T13:13:47-05:00
 
 app = "pathika"
 kill_signal = "SIGTERM"

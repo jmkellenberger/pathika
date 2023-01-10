@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :pathika, Pathika.Repo,
-  username: "teraat",
-  password: "teraat",
+  username: "jmkellenberger",
+  password: "jmkellenberger",
   hostname: "localhost",
   database: "pathika_dev",
   stacktrace: true,
