@@ -6,8 +6,8 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :pathika, Pathika.Repo,
-  username: "teraat",
-  password: "teraat",
+  username: "jmkellenberger",
+  password: "jmkellenberger",
   hostname: "localhost",
   database: "pathika_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,

@@ -1,4 +1,4 @@
-defmodule Pathika.Star do
+defmodule Pathika.Parser.Star do
   @moduledoc """
   Creates Primary Stars and their companions from T5 stellar data strings.
   """
@@ -24,7 +24,7 @@ defmodule Pathika.Star do
            | :invalid_primary_type
            | :invalid_size
            | :invalid_type}
-          | {:ok, [Pathika.Star.t()]}
+          | {:ok, [Pathika.Parser.Star.t()]}
   @doc """
   Parses a space separated string of stellar data and returns a list of Stars.
 
@@ -35,14 +35,14 @@ defmodule Pathika.Star do
    * Brown Dwarfs: BD
 
   ## Examples
-      iex> alias Pathika.Star
-      Pathika.Star
+      iex> alias Pathika.Parser.Star
+      Pathika.Parser.Star
       iex>Star.new("F7 V DM M3 V")
       {:ok,
       [
-      %Pathika.Star{type: "F", size: "V", decimal: "7"},
-      %Pathika.Star{type: "M", size: "D", decimal: ""},
-      %Pathika.Star{type: "M", size: "V", decimal: "3"}
+      %Pathika.Parser.Star{type: "F", size: "V", decimal: "7"},
+      %Pathika.Parser.Star{type: "M", size: "D", decimal: ""},
+      %Pathika.Parser.Star{type: "M", size: "V", decimal: "3"}
       ]}
       iex>Star.new("BD F7 V M0 V")
       {:error, :invalid_primary_type}

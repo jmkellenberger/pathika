@@ -1,7 +1,7 @@
-defmodule Pathika.StarTest do
+defmodule Pathika.Parser.StarTest do
   use ExUnit.Case, async: true
-  doctest Pathika.Star
-  alias Pathika.Star
+  doctest Pathika.Parser.Star
+  alias Pathika.Parser.Star
 
   describe "new/1" do
     test "Parses stellar data into star structs" do
@@ -10,9 +10,9 @@ defmodule Pathika.StarTest do
       assert Star.new(valid) ==
                {:ok,
                 [
-                  %Pathika.Star{type: "F", size: "V", decimal: "7"},
-                  %Pathika.Star{type: "M", size: "D", decimal: ""},
-                  %Pathika.Star{type: "M", size: "V", decimal: "3"}
+                  %Star{type: "F", size: "V", decimal: "7"},
+                  %Star{type: "M", size: "D", decimal: ""},
+                  %Star{type: "M", size: "V", decimal: "3"}
                 ]}
     end
 

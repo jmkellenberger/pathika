@@ -1,8 +1,8 @@
-defmodule Pathika.UWPTest do
+defmodule Pathika.Parser.UWPTest do
   use ExUnit.Case, async: true
-  doctest Pathika.UWP
+  doctest Pathika.Parser.UWP
 
-  alias Pathika.UWP
+  alias Pathika.Parser.UWP
 
   describe "when generating a main world" do
     test "creates a main world from a valid UWP" do
@@ -225,7 +225,7 @@ defmodule Pathika.UWPTest do
 
       assert UWP.new(world1, :hospitable) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   atmosphere: 6,
                   government: 5,
                   hydrographics: 5,
@@ -240,7 +240,7 @@ defmodule Pathika.UWPTest do
 
       assert UWP.new(world2, :hospitable) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   atmosphere: 15,
                   government: 14,
                   hydrographics: 10,
@@ -278,7 +278,7 @@ defmodule Pathika.UWPTest do
 
       assert UWP.new(world1, :planetoid) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   atmosphere: 0,
                   government: 5,
                   hydrographics: 0,
@@ -293,7 +293,7 @@ defmodule Pathika.UWPTest do
 
       assert UWP.new(world2, :planetoid) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   atmosphere: 0,
                   government: 14,
                   hydrographics: 0,
@@ -324,7 +324,7 @@ defmodule Pathika.UWPTest do
     test "Returns a world with valid values" do
       assert UWP.new("H100355-6", :worldlet) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   port: :h,
                   size: 1,
                   atmosphere: 0,
@@ -337,7 +337,7 @@ defmodule Pathika.UWPTest do
 
       assert UWP.new("H200355-6", :worldlet) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   port: :h,
                   size: 2,
                   atmosphere: 0,
@@ -350,7 +350,7 @@ defmodule Pathika.UWPTest do
 
       assert UWP.new("H311355-6", :worldlet) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   port: :h,
                   size: 3,
                   atmosphere: 1,
@@ -372,7 +372,7 @@ defmodule Pathika.UWPTest do
     test "Returns a world with valid values" do
       assert UWP.new("H100355-6", :ice) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   port: :h,
                   size: 1,
                   atmosphere: 0,
@@ -394,7 +394,7 @@ defmodule Pathika.UWPTest do
     test "Returns a world with valid values" do
       assert UWP.new("H566355-6", :inner) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   atmosphere: 6,
                   government: 5,
                   hydrographics: 6,
@@ -419,7 +419,7 @@ defmodule Pathika.UWPTest do
     test "Returns a world with valid values" do
       assert UWP.new("YAD6455-6", :storm) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   atmosphere: 13,
                   government: 5,
                   hydrographics: 6,
@@ -444,7 +444,7 @@ defmodule Pathika.UWPTest do
     test "Returns a world with valid values" do
       assert UWP.new("YFDA455-6", :big) ==
                {:ok,
-                %Pathika.UWP{
+                %UWP{
                   atmosphere: 13,
                   government: 5,
                   hydrographics: 10,

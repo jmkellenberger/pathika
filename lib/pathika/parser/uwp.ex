@@ -1,4 +1,4 @@
-defmodule Pathika.UWP do
+defmodule Pathika.Parser.UWP do
   @moduledoc """
   Constructs Universal World Profiles
   """
@@ -60,7 +60,7 @@ defmodule Pathika.UWP do
            | :invalid_size
            | :invalid_tech_level
            | :invalid_uwp_length}
-          | {:ok, Pathika.UWP.t()}
+          | {:ok, Pathika.Parser.UWP.t()}
   @doc """
   Constructs a Universal World Profile from an alphanumeric string and optional
   world type atom.
@@ -79,13 +79,13 @@ defmodule Pathika.UWP do
 
 
   ## Examples
-      iex> alias Pathika.UWP
-      Pathika.UWP
+      iex> alias Pathika.Parser.UWP
+      Pathika.Parser.UWP
       iex> world = "A788899-C"
       "A788899-C"
       iex> UWP.new(world)
       {:ok,
-      %Pathika.UWP{
+      %Pathika.Parser.UWP{
       port: :a,
       size: 7,
       atmosphere: 8,
@@ -96,8 +96,8 @@ defmodule Pathika.UWP do
       tech: 12
       }}
 
-      iex> alias Pathika.UWP
-      Pathika.UWP
+      iex> alias Pathika.Parser.UWP
+      Pathika.Parser.UWP
       iex> world = "F788899-6"
       "F788899-6"
       iex> UWP.new(world, :inferno)
