@@ -1,5 +1,6 @@
 defmodule Pathika.WorldGen.World do
   alias Pathika.{Math, Names}
+  alias Pathika.WorldGen.{Bases, Natives}
 
   defstruct [
     :type,
@@ -11,7 +12,11 @@ defmodule Pathika.WorldGen.World do
     :population,
     :government,
     :law,
-    :tech
+    :tech,
+    :bases,
+    :travel_zone,
+    :pbg,
+    :natives
   ]
 
   def world_generator(type, opts) do
@@ -26,6 +31,10 @@ defmodule Pathika.WorldGen.World do
       |> set_government()
       |> set_law()
       |> set_tech()
+      |> random_bases()
+      |> travel_zone()
+      |> random_pbg()
+      |> random_natives()
 
     world
   end
@@ -380,5 +389,73 @@ defmodule Pathika.WorldGen.World do
       _ ->
         0
     end
+  end
+
+  defp random_bases({world, opts}), do: {Bases.check_bases(world), opts}
+
+  defp travel_zone({world, opts}) when world.starport == "X" do
+    travel_zone =
+      if Math.roll(2) == 12 do
+        automatic_travel_zone(world)
+      else
+        :red
+      end
+
+    {%__MODULE__{world | travel_zone: travel_zone}, opts}
+  end
+
+  defp travel_zone({world, opts}) do
+    travel_zone = automatic_travel_zone(world)
+
+    {%__MODULE__{world | travel_zone: travel_zone}, opts}
+  end
+
+  defp automatic_travel_zone(world) do
+    case world.government + world.law do
+      x when x >= 22 ->
+        :red
+
+      x when x >= 20 ->
+        :amber
+
+      _ ->
+        :green
+    end
+  end
+
+  defp random_pbg({world, opts}) do
+    pbg = %{
+      population_digit: random_population_modifier(),
+      gas_giants: random_gas_giant_count(),
+      belts: random_belt_count()
+    }
+
+    {%__MODULE__{world | pbg: pbg}, opts}
+  end
+
+  defp random_population_modifier do
+    [1, 7, 5, 3, 1, 2, 1, 4, 6, 8, 9]
+    |> Enum.at(Math.roll(2) - 2)
+  end
+
+  defp random_gas_giant_count do
+    (Math.roll(2) / 2 - 2)
+    |> round()
+    |> Math.clamp(0, 5)
+  end
+
+  defp random_belt_count do
+    (Math.roll() - 3) |> Math.clamp(0, 3)
+  end
+
+  defp random_natives({world, opts}) do
+    {presence, type, description} = Natives.check_for_natives(world)
+
+    world = %__MODULE__{
+      world
+      | natives: %{presence: presence, type: type, description: description}
+    }
+
+    {world, opts}
   end
 end

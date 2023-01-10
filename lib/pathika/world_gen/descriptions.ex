@@ -233,11 +233,11 @@ defmodule Pathika.WorldGen.Descriptions do
     {world, %{}}
     |> put_formatted_name()
     |> detailed_uwp_description()
-
-    # |> apply_population_digit()
-    # |> put_belts()
-    # |> put_gas_giants()
-    # |> put_native_life_status()
+    |> apply_population_digit()
+    |> put_belts()
+    |> put_gas_giants()
+    |> put_base_presence()
+    |> put_native_life_status()
   end
 
   defp put_formatted_name({world, desc}) do
@@ -302,18 +302,18 @@ defmodule Pathika.WorldGen.Descriptions do
     {world, desc}
   end
 
-  # defp put_base_presence({world, desc}) do
-  #   bases =
-  #     case world.bases do
-  #       %{scout: true, naval: true} -> "Both a naval and scout base are present on this world."
-  #       %{scout: false, naval: true} -> "There is a naval base on this world."
-  #       %{scout: true, naval: false} -> "There is a scout base on this world."
-  #       %{scout: false, naval: false} -> "This world does not have a scout or naval base."
-  #     end
+  defp put_base_presence({world, desc}) do
+    bases =
+      case world.bases do
+        %{scout: true, naval: true} -> "Both a naval and scout base are present on this world."
+        %{scout: false, naval: true} -> "There is a naval base on this world."
+        %{scout: true, naval: false} -> "There is a scout base on this world."
+        %{scout: false, naval: false} -> "This world does not have a scout or naval base."
+      end
 
-  #   desc = Map.put(desc, :bases, bases)
-  #   {world, desc}
-  # end
+    desc = Map.put(desc, :bases, bases)
+    {world, desc}
+  end
 
   defp put_native_life_status({world, desc}) do
     natives = "#{world.natives.type}. #{world.natives.description}"
