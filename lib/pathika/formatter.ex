@@ -43,6 +43,15 @@ defmodule Pathika.Formatter do
       |> List.insert_at(6, "-")
       |> Enum.join()
 
-    "#{world.name} #{world.port}#{attributes}"
+    "#{world.port}#{attributes}"
+  end
+
+  def base_code(bases) do
+    case bases do
+      %{naval: true, scout: true} -> "B"
+      %{naval: true, scout: false} -> "N"
+      %{naval: false, scout: true} -> "S"
+      %{naval: false, scout: false} -> ""
+    end
   end
 end

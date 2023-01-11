@@ -14,7 +14,7 @@ defmodule Pathika.Parser.UWP do
             tech: :unknown
 
   @type t() :: %__MODULE__{
-          port: :unknown | :a | :b | :c | :d | :e | :x | :f | :g | :h | :y,
+          port: :unknown | :A | :B | :C | :D | :E | :X | :F | :G | :H | :Y,
           size: :unknown | 0..15,
           atmosphere: :unknown | 0..15,
           hydrographics: :unknown | 0..10,
@@ -86,7 +86,7 @@ defmodule Pathika.Parser.UWP do
       iex> UWP.new(world)
       {:ok,
       %Pathika.Parser.UWP{
-      port: :a,
+      port: :A,
       size: 7,
       atmosphere: 8,
       hydrographics: 8,
@@ -134,8 +134,8 @@ defmodule Pathika.Parser.UWP do
   defp parse_port("?"), do: {:ok, :unknown}
 
   defp parse_port(input) do
-    port = String.downcase(input)
-    ports = ["a", "b", "c", "d", "e", "f", "g", "h", "y", "x"]
+    port = String.upcase(input)
+    ports = ~w(A B C D E F G H Y X)
 
     if port in ports do
       {:ok, String.to_atom(port)}
@@ -198,17 +198,17 @@ defmodule Pathika.Parser.UWP do
   end
 
   defp port_valid?(%{port: :unknown}, _type), do: true
-  defp port_valid?(uwp, :inferno), do: uwp.port == :y
-  defp port_valid?(uwp, :main), do: uwp.port in [:a, :b, :c, :d, :e, :x]
+  defp port_valid?(uwp, :inferno), do: uwp.port == :Y
+  defp port_valid?(uwp, :main), do: uwp.port in [:A, :B, :C, :D, :E, :X]
 
   defp port_valid?(%{port: port}, _type)
-       when port in [:a, :b, :c, :d, :e, :x],
+       when port in [:A, :B, :C, :D, :E, :X],
        do: false
 
-  defp port_valid?(%{port: :f, population: pop}, _type) when pop > 5, do: true
-  defp port_valid?(%{port: :g, population: pop}, _type) when pop > 4, do: true
-  defp port_valid?(%{port: :h, population: pop}, _type) when pop > 0, do: true
-  defp port_valid?(%{port: :y}, _type), do: true
+  defp port_valid?(%{port: :F, population: pop}, _type) when pop > 5, do: true
+  defp port_valid?(%{port: :G, population: pop}, _type) when pop > 4, do: true
+  defp port_valid?(%{port: :H, population: pop}, _type) when pop > 0, do: true
+  defp port_valid?(%{port: :Y}, _type), do: true
 
   defp port_valid?(_uwp, _type), do: false
 
@@ -382,7 +382,7 @@ defmodule Pathika.Parser.UWP do
 
   defp tech_mods,
     do: %{
-      port: %{a: 6, b: 4, c: 2, f: 1, x: -4},
+      port: %{A: 6, B: 4, C: 2, F: 1, X: -4},
       size: %{0 => 2, 1 => 2, 2 => 1, 3 => 1, 4 => 1},
       atmosphere: %{
         0 => 1,

@@ -11,7 +11,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new(world, :main) ==
                {:ok,
                 %UWP{
-                  port: :a,
+                  port: :A,
                   size: 7,
                   atmosphere: 8,
                   hydrographics: 8,
@@ -41,7 +41,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new("A?9A?5?-?") ==
                {:ok,
                 %UWP{
-                  port: :a,
+                  port: :A,
                   size: :unknown,
                   atmosphere: 9,
                   hydrographics: 10,
@@ -124,7 +124,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new(world1, :inferno) ==
                {:ok,
                 %UWP{
-                  port: :y,
+                  port: :Y,
                   size: 7,
                   atmosphere: 11,
                   hydrographics: 0,
@@ -139,7 +139,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new(world2, :inferno) ==
                {:ok,
                 %UWP{
-                  port: :y,
+                  port: :Y,
                   size: 12,
                   atmosphere: 11,
                   hydrographics: 0,
@@ -175,7 +175,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new(world1, :rad) ==
                {:ok,
                 %UWP{
-                  port: :y,
+                  port: :Y,
                   size: 4,
                   atmosphere: 6,
                   hydrographics: 5,
@@ -190,7 +190,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new(world2, :rad) ==
                {:ok,
                 %UWP{
-                  port: :y,
+                  port: :Y,
                   size: 12,
                   atmosphere: 15,
                   hydrographics: 10,
@@ -231,7 +231,7 @@ defmodule Pathika.Parser.UWPTest do
                   hydrographics: 5,
                   law: 5,
                   population: 3,
-                  port: :y,
+                  port: :Y,
                   size: 4,
                   tech: 6
                 }}
@@ -246,7 +246,7 @@ defmodule Pathika.Parser.UWPTest do
                   hydrographics: 10,
                   law: 16,
                   population: 9,
-                  port: :f,
+                  port: :F,
                   size: 12,
                   tech: 12
                 }}
@@ -284,7 +284,7 @@ defmodule Pathika.Parser.UWPTest do
                   hydrographics: 0,
                   law: 5,
                   population: 3,
-                  port: :h,
+                  port: :H,
                   size: 0,
                   tech: 6
                 }}
@@ -299,7 +299,7 @@ defmodule Pathika.Parser.UWPTest do
                   hydrographics: 0,
                   law: 16,
                   population: 9,
-                  port: :y,
+                  port: :Y,
                   size: 0,
                   tech: 11
                 }}
@@ -325,7 +325,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new("H100355-6", :worldlet) ==
                {:ok,
                 %UWP{
-                  port: :h,
+                  port: :H,
                   size: 1,
                   atmosphere: 0,
                   hydrographics: 0,
@@ -338,7 +338,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new("H200355-6", :worldlet) ==
                {:ok,
                 %UWP{
-                  port: :h,
+                  port: :H,
                   size: 2,
                   atmosphere: 0,
                   hydrographics: 0,
@@ -351,7 +351,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new("H311355-6", :worldlet) ==
                {:ok,
                 %UWP{
-                  port: :h,
+                  port: :H,
                   size: 3,
                   atmosphere: 1,
                   hydrographics: 1,
@@ -373,7 +373,7 @@ defmodule Pathika.Parser.UWPTest do
       assert UWP.new("H100355-6", :ice) ==
                {:ok,
                 %UWP{
-                  port: :h,
+                  port: :H,
                   size: 1,
                   atmosphere: 0,
                   hydrographics: 0,
@@ -400,7 +400,7 @@ defmodule Pathika.Parser.UWPTest do
                   hydrographics: 6,
                   law: 5,
                   population: 3,
-                  port: :h,
+                  port: :H,
                   size: 5,
                   tech: 6
                 }}
@@ -425,7 +425,7 @@ defmodule Pathika.Parser.UWPTest do
                   hydrographics: 6,
                   law: 5,
                   population: 4,
-                  port: :y,
+                  port: :Y,
                   size: 10,
                   tech: 6
                 }}
@@ -450,7 +450,7 @@ defmodule Pathika.Parser.UWPTest do
                   hydrographics: 10,
                   law: 5,
                   population: 4,
-                  port: :y,
+                  port: :Y,
                   size: 15,
                   tech: 6
                 }}

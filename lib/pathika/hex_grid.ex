@@ -3,9 +3,9 @@ defmodule Pathika.HexGrid do
   @width 2 * @size
   @height :math.sin(:math.pi() / 3) * @size * 2
 
-  @spec new(pos_integer, pos_integer) :: [{binary, binary}]
-  def new(col, row) do
-    grid = coordinates(col, row)
+  @spec new({pos_integer, pos_integer}) :: [{binary, binary}]
+  def new(grid_size) do
+    grid = coordinates(grid_size)
 
     Enum.map(grid, fn x ->
       coord = coordinate_to_string(x)
@@ -34,8 +34,8 @@ defmodule Pathika.HexGrid do
     {@size + (col - 1) * @width * 0.75, row * @height - vertical_offset(col)}
   end
 
-  @spec coordinates(pos_integer, pos_integer) :: [{pos_integer, pos_integer}]
-  def coordinates(col, row) do
+  @spec coordinates({pos_integer, pos_integer}) :: [{pos_integer, pos_integer}]
+  def coordinates({col, row}) do
     for x <- 1..col, y <- 1..row, do: {x, y}
   end
 

@@ -1,5 +1,5 @@
 <h1> Random World Generator</h1>
-<h2><%= "#{@name} (#{@uwp})" %></h2>
+<h2><%= "#{@world_name} (#{@uwp})" %></h2>
 <body>
     <dl>
         <dt>Type</dt>
@@ -26,6 +26,8 @@
         <dd><%= @belts_and_gas %></dd>
         <dt>Status of Native Intelligent Life</dt>
         <dd><%= @natives %></dd>
+        <dt>Travel Advisory</dt>
+        <dd><%= @travel_zone %></dd>
     </dl>
 </body>
 <strong> <%= link "Generate another random world", to: "/worldgen" %> </strong>

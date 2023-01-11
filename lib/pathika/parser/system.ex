@@ -1,8 +1,8 @@
-defmodule Pathika.System do
+defmodule Pathika.Parser.System do
   @moduledoc """
   Parses Traveller5 Second Survey data into system structs. See https://travellermap.com/doc/fileformats.any()
 
-    iex> Pathika.System.parse_data(
+    iex> Pathika.Parser.System.parse_data(
           "
           Name                                   Hex  UWP       Remarks                                  {Ix}   (Ex)    [Cx]   N     B  Z PBG W  A    Stellar \
           -------------------------------------- ---- --------- ---------------------------------------- ------ ------- ------ ----- -- - --- -- ---- -------------- \
@@ -11,7 +11,7 @@ defmodule Pathika.System do
         )
 
         [
-        %Pathika.System{
+        %Pathika.Parser.System{
           hex: "0101",
           name: "Zeycude",
           uwp: "C430698-9",
@@ -64,6 +64,9 @@ defmodule Pathika.System do
     "stellar" => :stellar
   }
 
+  @doc """
+  Sample System Data
+  """
   def sample do
     """
     Hex  Name                 UWP       Remarks                                  {Ix}   (Ex)    [Cx]   N     B  Z PBG W  A    Stellar

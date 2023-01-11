@@ -1,50 +1,38 @@
 defmodule Pathika.WorldGen.Bases do
-  alias Pathika.WorldGen.World
   alias Pathika.Math
 
   def check_bases(world) do
     world
+    |> Map.put(:bases, %{scout: false, naval: false})
     |> check_scout(Math.roll(2))
     |> check_naval(Math.roll(2))
   end
 
-  defp check_scout(world, roll) when world.uwp.starport == "A" and roll <= 4 do
-    bases = %{world.bases | scout: true}
-
-    %World{world | bases: bases}
+  defp check_scout(world, roll) when world.port == :A and roll <= 4 do
+    %{world | bases: Map.put(world.bases, :scout, true)}
   end
 
-  defp check_scout(world, roll) when world.uwp.starport == "B" and roll <= 5 do
-    bases = %{world.bases | scout: true}
-
-    %World{world | bases: bases}
+  defp check_scout(world, roll) when world.port == :B and roll <= 5 do
+    %{world | bases: Map.put(world.bases, :scout, true)}
   end
 
-  defp check_scout(world, roll) when world.uwp.starport == "C" and roll <= 6 do
-    bases = %{world.bases | scout: true}
-
-    %World{world | bases: bases}
+  defp check_scout(world, roll) when world.port == :C and roll <= 6 do
+    %{world | bases: Map.put(world.bases, :scout, true)}
   end
 
-  defp check_scout(world, roll) when world.uwp.starport == "D" and roll <= 7 do
-    bases = %{world.bases | scout: true}
-
-    %World{world | bases: bases}
+  defp check_scout(world, roll) when world.port == :D and roll <= 7 do
+    %{world | bases: Map.put(world.bases, :scout, true)}
   end
 
-  defp check_scout(world, _roll), do: %{world | bases: %{scout: false}}
+  defp check_scout(world, _roll), do: world
 
-  defp check_naval(world, roll) when world.uwp.starport == "A" and roll <= 6 do
-    bases = %{world.bases | naval: true}
-
-    %World{world | bases: bases}
+  defp check_naval(world, roll) when world.port == :A and roll <= 6 do
+    %{world | bases: Map.put(world.bases, :naval, true)}
   end
 
-  defp check_naval(world, roll) when world.uwp.starport == "B" and roll <= 5 do
-    bases = %{world.bases | naval: true}
-
-    %World{world | bases: bases}
+  defp check_naval(world, roll) when world.port == :B and roll <= 5 do
+    %{world | bases: Map.put(world.bases, :naval, true)}
   end
 
-  defp check_naval(world, _roll), do: %{world | bases: Map.put(world.bases, :naval, false)}
+  defp check_naval(world, _roll), do: world
 end

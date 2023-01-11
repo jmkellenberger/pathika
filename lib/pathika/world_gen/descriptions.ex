@@ -17,24 +17,23 @@ defmodule Pathika.WorldGen.Descriptions do
         "Non-MainWorld. This world is wracked by extreme weather patterns and constant atmospheric turbulence."
     },
     port: %{
-      "X" =>
+      X:
         "No starport. Class X starports are generally indicative of an interdiction. No provision is made for any starship landings and such landings are probably prohibited.",
-      "Y" => "No spaceport.",
-      "H" =>
-        "Barebones spaceport serving in-system space travel. Provides no services other than a navigational beacon.",
-      "G" =>
+      Y: "No spaceport.",
+      H: "Barebones spaceport serving in-system space travel. Provides no services other than a navigational beacon.",
+      G:
         "Poor quality spaceport serving in-system travel. Facilities for slight spaceship repair.",
-      "F" =>
+      F:
         "Good quality spaceport serving in-system travel. Facilities for minor spaceship repair.",
-      "E" =>
+      E:
         "Frontier installation. Essentially a bare spot of bedrock with no fuel, facilities, or bases present.",
-      "D" =>
+      D:
         "Poor quality installation. Only unrefined fuel available. No repair or shipyard facilities present.",
-      "C" =>
+      C:
         "Routine quality installation. Only unrefined fuel available. Reasonable repair facilities are present.",
-      "B" =>
+      B:
         "Good quality installation. Refined fuel available. Annual maintenance overhaul available. Shipyard capable ofo constructing non-starships present.",
-      "A" =>
+      A:
         "Excellent quality installation. Refined fuel available. Annual maintenance overhaul available. Shipyard capable of both starship and non-starship construction present."
     },
     size: %{
@@ -252,21 +251,27 @@ defmodule Pathika.WorldGen.Descriptions do
   }
   def detailed_world_description(world) do
     {world, %{}}
-    |> put_formatted_name()
+    |> put_name()
+    |> put_formatted_uwp()
     |> detailed_uwp_description()
     |> apply_population_digit()
     |> put_belts()
     |> put_gas_giants()
     |> put_base_presence()
     |> put_native_life_status()
+    |> put_travel_zone()
   end
 
-  defp put_formatted_name({world, desc}) do
-    desc =
-      Map.put(desc, :name, world.name)
-      |> Map.put(:uwp, Formatter.format_world(world))
+  defp put_name({world, desc}) do
+    {world, Map.put(desc, :world_name, world.name)}
+    |> IO.inspect()
+  end
+
+  defp put_formatted_uwp({world, desc}) do
+    desc = Map.put(desc, :uwp, Formatter.format_world(world))
 
     {world, desc}
+    |> IO.inspect()
   end
 
   defp detailed_uwp_description({world, desc}) do
@@ -340,5 +345,16 @@ defmodule Pathika.WorldGen.Descriptions do
     natives = "#{world.natives.type}. #{world.natives.description}"
     desc = Map.put(desc, :natives, natives)
     {world, desc}
+  end
+
+  defp put_travel_zone({world, desc}) do
+    zone =
+      case world.travel_zone do
+        :green -> "Green. There are no outstanding travel advisories for this world."
+        :amber -> "Amber Zone."
+        :red -> "Red Zone"
+      end
+
+    {world, Map.put(desc, :travel_zone, zone)}
   end
 end

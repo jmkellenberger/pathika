@@ -3,6 +3,7 @@ defmodule Pathika.WorldGen.World do
   alias Pathika.WorldGen.{Bases, Natives}
 
   defstruct [
+    :hex,
     :type,
     :name,
     :port,
@@ -22,6 +23,7 @@ defmodule Pathika.WorldGen.World do
   def world_generator(type, opts) do
     {world, _} =
       {%__MODULE__{type: type}, opts}
+      |> set_hex()
       |> set_name()
       |> set_population()
       |> set_port()
@@ -31,42 +33,34 @@ defmodule Pathika.WorldGen.World do
       |> set_government()
       |> set_law()
       |> set_tech()
-      |> random_bases()
-      |> travel_zone()
-      |> random_pbg()
+      |> set_bases()
+      |> set_travel_zone()
+      |> set_pbg()
       |> random_natives()
 
     world
   end
 
   def random_orbital_zone() do
-    if Math.roll() > 3 do
-      :outer
-    else
-      :inner
-    end
+    Enum.random([:inner, :outer])
   end
 
   def random_world_type(:outer) do
     case Math.roll() do
       1 -> :worldlet
-      2 -> :iceworld
-      3 -> :bigworld
-      4 -> :iceworld
-      5 -> :radworld
-      6 -> :iceworld
+      2 -> :bigworld
+      3 -> :radworld
+      _ -> :iceworld
     end
   end
 
   def random_world_type(:inner) do
-    case Math.roll() do
-      1 -> :inferno
-      2 -> :innerworld
-      3 -> :bigworld
-      4 -> :stormworld
-      5 -> :radworld
-      6 -> :hospitable
-    end
+    Enum.random([:inferno, :innerworld, :bigworld, :stormworld, :radworld, :hospitable])
+  end
+
+  defp set_hex({world, opts}) do
+    hex = Keyword.get(opts, :hex, "0000")
+    {%__MODULE__{world | hex: hex}, opts}
   end
 
   defp set_name({world, opts}) do
@@ -84,22 +78,22 @@ defmodule Pathika.WorldGen.World do
   end
 
   defp random_port(world) when world.type == :mainworld do
-    ["A", "A", "A", "B", "B", "C", "C", "D", "E", "E", "X"]
+    ~w(A A A B B C C D E E X)a
     |> Enum.at(Math.roll(2) - 2)
   end
 
   defp random_port(world) when world.type == :inferno do
-    "Y"
+    :Y
   end
 
   defp random_port(world) do
     roll = world.population - Math.roll()
 
     case roll do
-      n when n > 3 -> "F"
-      3 -> "G"
-      n when n > 0 -> "H"
-      _ -> "Y"
+      n when n > 3 -> :F
+      3 -> :G
+      n when n > 0 -> :H
+      _ -> :Y
     end
   end
 
@@ -300,19 +294,19 @@ defmodule Pathika.WorldGen.World do
 
   defp tech_mod({:port, value}) do
     case value do
-      "A" ->
+      :A ->
         6
 
-      "B" ->
+      :B ->
         4
 
-      "C" ->
+      :C ->
         2
 
-      "J" ->
+      :J ->
         1
 
-      "X" ->
+      :X ->
         -4
 
       _ ->
@@ -391,26 +385,23 @@ defmodule Pathika.WorldGen.World do
     end
   end
 
-  defp random_bases({world, opts}), do: {Bases.check_bases(world), opts}
+  defp set_bases({world, opts}) do
+    world = Keyword.get(opts, :bases, Bases.check_bases(world))
 
-  defp travel_zone({world, opts}) when world.starport == "X" do
-    travel_zone =
-      if Math.roll(2) == 12 do
-        automatic_travel_zone(world)
-      else
-        :red
-      end
-
-    {%__MODULE__{world | travel_zone: travel_zone}, opts}
+    {world, opts}
   end
 
-  defp travel_zone({world, opts}) do
-    travel_zone = automatic_travel_zone(world)
+  defp set_travel_zone({world, opts}) do
+    zone = Keyword.get(opts, :travel_zone, random_travel_zone(world))
 
-    {%__MODULE__{world | travel_zone: travel_zone}, opts}
+    {%__MODULE__{world | travel_zone: zone}, opts}
   end
 
-  defp automatic_travel_zone(world) do
+  defp random_travel_zone(world) do
+    if world.port == :X and Math.roll(2) < 12 do
+      :red
+    end
+
     case world.government + world.law do
       x when x >= 22 ->
         :red
@@ -423,11 +414,11 @@ defmodule Pathika.WorldGen.World do
     end
   end
 
-  defp random_pbg({world, opts}) do
+  defp set_pbg({world, opts}) do
     pbg = %{
-      population_digit: random_population_modifier(),
-      gas_giants: random_gas_giant_count(),
-      belts: random_belt_count()
+      population_digit: Keyword.get(opts, :population_digit, random_population_modifier()),
+      gas_giants: Keyword.get(opts, :gas_giants, random_gas_giant_count()),
+      belts: Keyword.get(opts, :belts, random_belt_count())
     }
 
     {%__MODULE__{world | pbg: pbg}, opts}

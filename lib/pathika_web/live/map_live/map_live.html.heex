@@ -1,32 +1,26 @@
-<div id="wrapper">
-  <div id="map-container">
-    <svg id="hex-map" height="800px" viewBox="0 0 500 728">
+<div id="wrapper" >
+    <svg id="hex-map" viewBox="0 0 500 728">
       <g phx-click="select">
       <%= for {coord, hex} <- @hex_grid do %>
           <polygon class="hex" id={"hex-" <> coord} points={hex} stroke="gray" fill="black"/>
       <% end %>
-      <%= for system <- @systems do %>
+      <%= for {_hex, system} <- @systems do %>
         <% {x, y} = HexGrid.center_point(system.hex) %>
-        <%= if system.travel_zone == "A" do %>
-        <circle class="click-through" cx={x} cy={y} stroke="orange" fill="none" r="30"/>
+        <%= if system.travel_zone === :amber do %>
+        <circle cx={x} cy={y} stroke="orange" fill="none" r="30"/>
         <% end%>
-        <%= if system.travel_zone == "R" do %>
-        <circle class="click-through" cx={x} cy={y} stroke="red" fill="none" r="30"/>
+        <%= if system.travel_zone === :red do %>
+        <circle cx={x} cy={y} stroke="red" fill="none"r="30"/>
         <% end%>
-        <circle class="click-through" cx={x} cy={y} fill="white" r="5"/>
-        <text class="click-through" text-anchor="middle" x={x} y={y - 23} fill="white" font-family="Optima,  sans-serif", font-size="x-small" > <%= system.hex %> </text>
-        <text class="click-through" text-anchor="middle" x={x} y={y - 10} fill="white" font-family="Optima,  sans-serif", font-size="x-small" > <%= String.slice(system.uwp, 0..0) %> </text>
-        <text class="click-through" text-anchor="middle" x={x} y={y + 25} fill="white" font-family="Optima,  sans-serif", font-size="smaller" > <%= system.name %> </text>
-        <%= if system.bases == "N" do %>
-          <text class="click-through" text-anchor="middle" x={x - 20} y={y} fill="white" font-family="Optima,  sans-serif", font-size="x-small" > <%= system.bases %> </text>
-        <% end%>
+        <circle cx={x} cy={y} fill="white" r="5"/>
+        <text x={x} y={y - 23}> <%= system.hex %> </text>
+        <text x={x} y={y - 10}> <%= system.port %> </text>
+        <text x={x} y={y + 25}> <%= system.name %> </text>
+        <text x={x - 20} y={y}> <%= Pathika.Formatter.base_code(system.bases)  %> </text>
       <% end %>
       </g>
     </svg>
-  </div>
-  <div id="data-input">
-    <.form let={f} for={:sector} phx-change="update">
-      <%= textarea(f , :data, wrap: "off", cols: "80", rows: "10", spellcheck: "false", phx_debounce: "500", value: System.sample()) %>
-    </.form>
-  </div>
+    <%= if @show_modal do %>
+        <%= live_component(PathikaWeb.ModalComponent, id: :modal, action: @action) %>
+    <% end %>
 </div>

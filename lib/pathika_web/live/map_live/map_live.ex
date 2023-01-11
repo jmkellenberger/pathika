@@ -1,54 +1,46 @@
 defmodule PathikaWeb.MapLive do
   use PathikaWeb, :live_view
   alias Pathika.HexGrid
-  alias Pathika.System
+  alias Pathika.Sector
 
-  def mount(_, _, socket) do
-    grid = HexGrid.new(8, 10)
+  @grid_size {8, 10}
+  @grid HexGrid.new(@grid_size)
+  @system_chance 5
+
+  def mount(params, _, socket) do
+    system_chance = Map.get(params, :system_chance, @system_chance)
+    systems = Map.get(params, :systems, Sector.random_sector(system_chance, @grid_size))
 
     socket =
       assign(socket,
-        hex_grid: grid,
-        page_title: "SectorMaker",
-        systems: System.parse_data(System.sample())
+        hex_grid: @grid,
+        page_title: "Map Editor",
+        systems: systems,
+        show_modal: false
       )
 
     {:ok, socket}
   end
 
-  # def handle_event(
-  #       "select",
-  #       %{"target" => "hex-" <> hex_number, "altKey" => false},
-  #       socket
-  #     ) do
-  #   subsector =
-  #     Map.update(socket.assigns.subsector, hex_number, nil, fn system ->
-  #       case system do
-  #         nil -> Names.random_world_name()
-  #         _ -> system
-  #       end
-  #     end)
+  def handle_event("select", %{"target" => "hex-" <> hex}, socket) do
+    world = socket.assigns.systems[hex]
 
-  #   socket = assign(socket, subsector: subsector)
+    socket = case world do
+      nil ->
+        assign(socket, :action, {:new, socket.assigns.systems})
+      _ -> assign(socket, action: {:show, world, socket.assigns.systems}, show_modal: true)
+    end
 
-  #   {:noreply, socket}
-  # end
+    socket = assign(socket, hex: hex)
 
-  def handle_event("update", %{"sector" => data}, socket) do
-    systems = data["data"] |> System.parse_data()
-    socket = assign(socket, :systems, systems)
     {:noreply, socket}
   end
 
-  # def handle_event("select", %{"target" => "hex-" <> hex_number, "altKey" => true}, socket) do
-  #   subsector = Map.put(socket.assigns.subsector, hex_number, nil)
+  def handle_event("close-modal", _, socket) do
+    {:noreply, close_modal(socket)}
+  end
 
-  #   socket = assign(socket, subsector: subsector)
-
-  #   {:noreply, socket}
-  # end
-
-  def handle_event("select", _, socket) do
-    {:noreply, socket}
+  defp close_modal(socket) do
+    assign(socket, :show_modal, false)
   end
 end
