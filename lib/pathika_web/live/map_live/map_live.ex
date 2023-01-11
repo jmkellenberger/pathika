@@ -2,14 +2,15 @@ defmodule PathikaWeb.MapLive do
   use PathikaWeb, :live_view
   alias Pathika.HexGrid
   alias Pathika.Sector
+  alias Pathika.Parser
 
   @grid_size {8, 10}
   @grid HexGrid.new(@grid_size)
   @system_chance 5
 
-  def mount(params, _, socket) do
-    system_chance = Map.get(params, :system_chance, @system_chance)
-    systems = Map.get(params, :systems, Sector.random_sector(system_chance, @grid_size))
+  def mount(_, _, socket) do
+    system_chance = @system_chance
+    systems = Sector.random_sector(system_chance, @grid_size)
 
     socket =
       assign(socket,
@@ -38,6 +39,15 @@ defmodule PathikaWeb.MapLive do
 
   def handle_event("close-modal", _, socket) do
     {:noreply, close_modal(socket)}
+  end
+
+  def handle_event("update", %{"sector" => data}, socket) do
+    case Parser.parse_system_data(data["data"]) do
+      {:error, error} ->
+        IO.inspect(error)
+        {:noreply, socket}
+      systems -> {:noreply, assign(socket, :systems, systems)}
+    end
   end
 
   defp close_modal(socket) do

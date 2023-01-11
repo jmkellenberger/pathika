@@ -1,4 +1,7 @@
 <div id="wrapper" >
+    <%= if @show_modal do %>
+        <%= live_component(PathikaWeb.ModalComponent, id: :modal, action: @action) %>
+    <% end %>
     <svg id="hex-map" viewBox="0 0 500 728">
       <g phx-click="select">
       <%= for {coord, hex} <- @hex_grid do %>
@@ -15,12 +18,15 @@
         <circle cx={x} cy={y} fill="white" r="5"/>
         <text x={x} y={y - 23}> <%= system.hex %> </text>
         <text x={x} y={y - 10}> <%= system.port %> </text>
-        <text x={x} y={y + 25}> <%= system.name %> </text>
+        <text x={x} y={y + 18}> <%= system.name %> </text>
+        <text x={x} y={y + 30}> <%= Pathika.Formatter.format_world(system) %> </text>
         <text x={x - 20} y={y}> <%= Pathika.Formatter.base_code(system.bases)  %> </text>
       <% end %>
       </g>
     </svg>
-    <%= if @show_modal do %>
-        <%= live_component(PathikaWeb.ModalComponent, id: :modal, action: @action) %>
-    <% end %>
+    <div id="data-input">
+      <.form let={f} for={:sector} phx-change="update">
+        <%= textarea(f , :data, wrap: "off", cols: "80", rows: "10", spellcheck: "false", value: Pathika.Formatter.format_sector(Map.values(@systems))) %>
+      </.form>
+    </div>
 </div>

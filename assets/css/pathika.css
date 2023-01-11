@@ -47,7 +47,3 @@ svg g text {
 svg g circle {
   pointer-events: none;
 }
-
-.system-name {
-  font-size: smaller;
-}

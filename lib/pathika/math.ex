@@ -26,7 +26,7 @@ defmodule Pathika.Math do
   @doc """
   Traveller5 flux roll. Returns the difference of two six sided die rolls.
   """
-  def flux(), do: Enum.reduce(rolls(2), &(&2 - &1))
+  def flux(), do: roll() - roll()
 
   @doc """
   Constrains a number to a range

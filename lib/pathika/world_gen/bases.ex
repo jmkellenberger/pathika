@@ -6,6 +6,7 @@ defmodule Pathika.WorldGen.Bases do
     |> Map.put(:bases, %{scout: false, naval: false})
     |> check_scout(Math.roll(2))
     |> check_naval(Math.roll(2))
+    |> Map.get(:bases)
   end
 
   defp check_scout(world, roll) when world.port == :A and roll <= 4 do

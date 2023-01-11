@@ -240,7 +240,7 @@ defmodule Pathika.Parser.UWP do
     if atmo in min..max do
       {:ok, uwp}
     else
-      {:error, :invalid_atmosphere}
+      {:error, {:invalid_atmosphere, uwp}}
     end
   end
 
@@ -267,7 +267,7 @@ defmodule Pathika.Parser.UWP do
     if hydro in min..max do
       {:ok, uwp}
     else
-      {:error, :invalid_hydrographics}
+      {:error, {:invalid_hydrographics, uwp}}
     end
   end
 
@@ -304,7 +304,7 @@ defmodule Pathika.Parser.UWP do
     if pop in min..max do
       {:ok, uwp}
     else
-      {:error, :invalid_population}
+      {:error, {:invalid_population, uwp}}
     end
   end
 
@@ -323,7 +323,7 @@ defmodule Pathika.Parser.UWP do
     if govt in min..max do
       {:ok, uwp}
     else
-      {:error, :invalid_government}
+      {:error, {:invalid_government, uwp}}
     end
   end
 
@@ -343,13 +343,12 @@ defmodule Pathika.Parser.UWP do
     if law in min..max do
       {:ok, uwp}
     else
-      {:error, :invalid_law_level}
+      {:error, {:invalid_law_level, uwp}}
     end
   end
 
   defp law_range(%{population: 0}, _type), do: {0, 0}
   defp law_range(%{government: :unknown}, _type), do: {0, 18}
-  defp law_range(%{government: 0}, _type), do: {0, 0}
 
   defp law_range(%{government: govt}, _type),
     do: {max(0, govt - 5), min(18, govt + 5)}
@@ -363,7 +362,7 @@ defmodule Pathika.Parser.UWP do
     if tech in min..max do
       {:ok, uwp}
     else
-      {:error, :invalid_tech_level}
+      {:error, {:invalid_tech_level, uwp}}
     end
   end
 
@@ -371,7 +370,8 @@ defmodule Pathika.Parser.UWP do
 
   defp tech_range(uwp, _type) do
     tech_mods = sum_tech_mods(uwp)
-    {max(tech_mods + 1, 0), min(tech_mods + 6, 33)}
+    # {max(tech_mods + 1, 0), min(tech_mods + 6, 33)}
+    {0, min(tech_mods + 6, 33)}
   end
 
   defp sum_tech_mods(uwp) do

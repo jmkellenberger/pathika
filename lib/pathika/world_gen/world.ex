@@ -131,7 +131,7 @@ defmodule Pathika.WorldGen.World do
   end
 
   defp set_atmosphere({world, opts}) do
-    value = Keyword.get(opts, :size, random_atmosphere(world))
+    value = Keyword.get(opts, :atmosphere, random_atmosphere(world))
     world = %__MODULE__{world | atmosphere: value}
 
     {world, opts}
@@ -152,7 +152,7 @@ defmodule Pathika.WorldGen.World do
 
   defp random_atmosphere(world) do
     (Math.flux() + world.size)
-    |> Math.clamp(0, 15)
+    |> Math.clamp(0..15)
   end
 
   defp set_hydrographics({world, opts}) do
@@ -167,15 +167,15 @@ defmodule Pathika.WorldGen.World do
   end
 
   defp random_hydrographics(world) do
-    (Math.flux() + world.atmosphere - hydrographics_mod(world))
+    (Math.flux() + hydrographics_mod(world))
     |> Math.clamp(0, 10)
   end
 
   defp hydrographics_mod(world) do
-    if world.atmosphere <= 2 or world.atmosphere >= 9 or world.type in [:stormworld, :innerworld] do
-      -4
+    if world.atmosphere < 2 or world.atmosphere > 9 or world.type in [:stormworld, :innerworld] do
+      world.atmosphere - 4
     else
-      0
+      world.atmosphere
     end
   end
 
@@ -235,7 +235,7 @@ defmodule Pathika.WorldGen.World do
     {world, opts}
   end
 
-  defp random_government(world) when world.type in [:radworld, :inferno] do
+  defp random_government(world) when world.type in [:radworld, :inferno] or world.population === 0 do
     0
   end
 
@@ -251,7 +251,7 @@ defmodule Pathika.WorldGen.World do
     {world, opts}
   end
 
-  defp random_law(world) when world.type in [:radworld, :inferno] do
+  defp random_law(world) when world.type in [:radworld, :inferno] or world.population === 0 do
     0
   end
 
@@ -386,9 +386,9 @@ defmodule Pathika.WorldGen.World do
   end
 
   defp set_bases({world, opts}) do
-    world = Keyword.get(opts, :bases, Bases.check_bases(world))
+    bases = Keyword.get(opts, :bases, Bases.check_bases(world))
 
-    {world, opts}
+    {%{world | bases: bases}, opts}
   end
 
   defp set_travel_zone({world, opts}) do

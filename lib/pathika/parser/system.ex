@@ -1,4 +1,5 @@
 defmodule Pathika.Parser.System do
+  alias Pathika.WorldGen
   @moduledoc """
   Parses Traveller5 Second Survey data into system structs. See https://travellermap.com/doc/fileformats.any()
 
@@ -106,6 +107,12 @@ defmodule Pathika.Parser.System do
       |> parse_headers()
 
     Enum.map(data, &build_system(&1, key))
+              |> Enum.reduce_while(%{}, fn system, acc ->
+                case input_to_world(system) do
+                  {:ok, system} -> {:cont, Map.put(acc, system.hex, system)}
+                  error -> {:halt, error}
+                end
+              end)
   end
 
   defp parse_headers([header, separator | data]) do
@@ -133,5 +140,43 @@ defmodule Pathika.Parser.System do
   defp put_attribute(key, system, data, fields) do
     value = String.slice(data, fields[key]) |> String.trim()
     Map.put(system, @t5_fields_to_keys[key], value)
+  end
+
+  defp input_to_world(system) do
+    case  Pathika.Parser.UWP.new(system.uwp) do
+      {:ok, uwp} -> attrs =
+                  Map.from_struct(uwp)
+                  |> Map.put(:hex, system.hex)
+                  |> Map.put(:name, system.name)
+                  |> Map.put(:bases, get_bases(system))
+                  |> Map.put(:travel_zone, get_zone(system))
+                  |> Map.merge(get_pbg(system))
+                  |> Keyword.new(fn {k, v} -> {k, v} end)
+
+                  {:ok, WorldGen.build(:main, attrs)}
+        err -> {:error, err}
+    end
+  end
+
+  defp get_bases(system) do
+    bases = system.bases |> to_charlist()
+    %{naval: Enum.member?(bases, "N"), scout: Enum.member?(bases, "S")}
+  end
+
+  defp get_zone(system) do
+    case system.travel_zone do
+      "R" -> :red
+      "A" -> :amber
+      _ -> :green
+    end
+  end
+
+  defp get_pbg(%{pbg: pbg}) when byte_size(pbg) === 3 do
+    [p, b, g] = String.split(pbg, "", trim: true) |> Enum.map(&String.to_integer/1)
+    %{population_digit: p, belts: b, gas_giants: g}
+  end
+
+  defp get_pbg(_system) do
+    %{population_digit: 1, belts: 0, gas_giants: 0}
   end
 end
